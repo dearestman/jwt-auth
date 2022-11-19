@@ -23,6 +23,7 @@ import ru.stupakov.insidemessages.servicies.AuthDetailsService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthDetailsService authDetailsService;
+    private final JWTFilter jwtFilter;
 
 
 
@@ -45,7 +46,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/auth/login").permitAll()
-                .anyRequest().hasAnyRole("USER");
+                .anyRequest().hasAnyRole("USER")
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
+        httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     /*
