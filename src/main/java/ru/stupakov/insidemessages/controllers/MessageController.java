@@ -50,10 +50,6 @@ public class MessageController {
      */
     @PostMapping("/message")
     public List<UserMessagesResponse> sendMessageOrGetHistory(@RequestBody @Valid UserMessageRequest userMessageRequest){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        AuthDetails authDetails = (AuthDetails) authentication.getPrincipal();
-
-        if (!userMessageRequest.getName().equals(authDetails.getUsername())) throw new TokenNotBelongUserException("Invalid token");
             if (userMessageRequest.getMessage().equals("history 10")){
                 return messageService.getUserMessages(userMessageRequest);
             } else {

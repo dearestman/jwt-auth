@@ -2,6 +2,8 @@ package ru.stupakov.insidemessages.servicies;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.stupakov.insidemessages.api.request.UserMessageRequest;
 import ru.stupakov.insidemessages.api.response.UserMessagesResponse;
@@ -9,6 +11,8 @@ import ru.stupakov.insidemessages.models.Message;
 import ru.stupakov.insidemessages.models.User;
 import ru.stupakov.insidemessages.repositories.MessageRepository;
 import ru.stupakov.insidemessages.repositories.UserRepository;
+import ru.stupakov.insidemessages.security.AuthDetails;
+import ru.stupakov.insidemessages.utils.exceptions.TokenNotBelongUserException;
 import ru.stupakov.insidemessages.utils.exceptions.UserNotFoundExceptions;
 
 import javax.transaction.Transactional;
@@ -29,12 +33,24 @@ public class MessageService {
 
 
     /*
+        Проверяет, принадлежит ли токен пользователю
+     */
+    public void mapTokenForUser(String username){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AuthDetails authDetails = (AuthDetails) authentication.getPrincipal();
+
+        if (!username.equals(authDetails.getUsername())) throw new TokenNotBelongUserException("Invalid token");
+    }
+
+
+    /*
         Получаем 10 последних сообщений пользователя
      */
     public List<UserMessagesResponse> getUserMessages(UserMessageRequest userMessageRequest){
 
         Optional<User> user = userRepository.findByName(userMessageRequest.getName());
         if (user.isEmpty()) throw new UserNotFoundExceptions("User not found");
+        mapTokenForUser(user.get().getName());
 
         return messageRepository.findTop10ByUserIdOrderByCreatedAtDesc(user.get().getId())
                 .stream()
@@ -67,6 +83,7 @@ public class MessageService {
         Optional<User> user = userRepository.findByName(userMessageRequest.getName());
 
         if (user.isEmpty()) throw new UserNotFoundExceptions("User not found");
+        mapTokenForUser(user.get().getName());
 
         message.setUser(user.get());
         message.setCreatedAt(LocalDateTime.now());
