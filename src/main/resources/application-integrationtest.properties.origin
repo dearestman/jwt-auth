@@ -1,3 +1,4 @@
+//настройки подключения к тестовой базе
 spring.datasource.driver-class-name=
 spring.datasource.url=
 spring.datasource.username=
