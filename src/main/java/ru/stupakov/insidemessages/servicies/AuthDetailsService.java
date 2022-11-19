@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import ru.stupakov.insidemessages.exceptions.UserNotFoundExceptions;
+import ru.stupakov.insidemessages.utils.exceptions.UserNotFoundExceptions;
 import ru.stupakov.insidemessages.models.User;
 import ru.stupakov.insidemessages.repositories.UserRepository;
 import ru.stupakov.insidemessages.security.AuthDetails;

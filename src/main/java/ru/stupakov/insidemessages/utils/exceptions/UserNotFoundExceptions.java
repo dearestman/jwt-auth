@@ -1,4 +1,4 @@
-package ru.stupakov.insidemessages.exceptions;
+package ru.stupakov.insidemessages.utils.exceptions;
 
 /**
  * @author Stupakov D. L.
