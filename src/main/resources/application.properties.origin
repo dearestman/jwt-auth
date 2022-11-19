@@ -4,5 +4,5 @@ spring.datasource.username=
 spring.datasource.password=
 
 spring.jpa.properties.hibernate.dialect=
-
+jwt_secret=
 
