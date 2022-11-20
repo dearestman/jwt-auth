@@ -8,8 +8,11 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import ru.stupakov.insidemessages.api.request.AuthenticationRequest;
+import ru.stupakov.insidemessages.security.AuthDetails;
 import ru.stupakov.insidemessages.security.JWTUtil;
+import ru.stupakov.insidemessages.servicies.AuthDetailsService;
 import ru.stupakov.insidemessages.utils.exceptions.UserErrorResponse;
+import ru.stupakov.insidemessages.utils.exceptions.UserNotFoundExceptions;
 
 import java.util.Map;
 
@@ -23,6 +26,7 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
+    private final AuthDetailsService authDetailsService;
 
 
     /**
@@ -44,8 +48,9 @@ public class AuthController {
      */
     @PostMapping("/login")
     public Map<String, String> getJWTToken(@RequestBody AuthenticationRequest authenticationRequest){
+        AuthDetails authDetails = (AuthDetails) authDetailsService.loadUserByUsername(authenticationRequest.getName());
         UsernamePasswordAuthenticationToken authInputToken =
-                new UsernamePasswordAuthenticationToken(authenticationRequest.getName(), authenticationRequest.getPassword());
+                new UsernamePasswordAuthenticationToken(authDetails.getUsername(), authDetails.getPassword());
         authenticationManager.authenticate(authInputToken);
         return Map.of("token", jwtUtil.generateToken(authenticationRequest.getName()));
     }
@@ -57,6 +62,7 @@ public class AuthController {
      */
     @ExceptionHandler
     private ResponseEntity<UserErrorResponse> handleException(BadCredentialsException exception){
+
         UserErrorResponse userErrorResponse = new UserErrorResponse(
                 exception.getMessage(),
                 System.currentTimeMillis()
@@ -65,6 +71,20 @@ public class AuthController {
         return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Обрабатывает исключение UserNotFoundExceptions
+     * @param exception
+     * @return Возвращаем сообщение об ошибке и время, когда она произошла
+     */
+    @ExceptionHandler
+    private ResponseEntity<UserErrorResponse> handleException(UserNotFoundExceptions exception){
+        UserErrorResponse userErrorResponse = new UserErrorResponse(
+                exception.getMessage(),
+                System.currentTimeMillis()
+        );
+        //в ответе будет тело HTTP ответа (response) и статус в загаловке
+        return new ResponseEntity<>(userErrorResponse, HttpStatus.BAD_REQUEST);
+    }
 
 
 }
