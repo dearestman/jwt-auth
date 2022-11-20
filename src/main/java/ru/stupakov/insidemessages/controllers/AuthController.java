@@ -50,7 +50,7 @@ public class AuthController {
     public Map<String, String> getJWTToken(@RequestBody AuthenticationRequest authenticationRequest){
         AuthDetails authDetails = (AuthDetails) authDetailsService.loadUserByUsername(authenticationRequest.getName());
         UsernamePasswordAuthenticationToken authInputToken =
-                new UsernamePasswordAuthenticationToken(authDetails.getUsername(), authDetails.getPassword());
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getName(), authenticationRequest.getPassword());
         authenticationManager.authenticate(authInputToken);
         return Map.of("token", jwtUtil.generateToken(authenticationRequest.getName()));
     }
