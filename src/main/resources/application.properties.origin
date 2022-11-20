@@ -4,6 +4,8 @@ spring.datasource.username=
 spring.datasource.password=
 spring.jpa.properties.hibernate.dialect=
 
+server.port=
+
 #using to generate jwt token
 jwt_secret=
 
