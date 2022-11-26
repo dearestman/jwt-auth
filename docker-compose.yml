@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  postgres:
+    image: 'postgres:13'
+    container_name: 'inside-messages-postgres'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_HOST_AUTH_METHOD=trust'
+      - 'POSTGRES_DB=messages'
+
+  app:
+    image: "dearestman/inside-messages"
+    container_name: 'inside-messages'
+    ports:
+      - 8001:8001
