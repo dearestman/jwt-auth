@@ -2,21 +2,16 @@ package ru.stupakov.insidemessages.servicies;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.TestPropertySource;
-import ru.stupakov.insidemessages.InsideMessagesApplication;
+import ru.stupakov.insidemessages.IntegrationTestBase;
 import ru.stupakov.insidemessages.api.request.UserMessageRequest;
 import ru.stupakov.insidemessages.models.User;
 import ru.stupakov.insidemessages.repositories.MessageRepository;
 import ru.stupakov.insidemessages.repositories.UserRepository;
 import ru.stupakov.insidemessages.security.AuthDetails;
-import ru.stupakov.insidemessages.security.JWTUtil;
 import ru.stupakov.insidemessages.utils.exceptions.UserNotFoundExceptions;
 
 import java.util.Optional;
@@ -26,12 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author Stupakov D. L.
  **/
-@SpringBootTest(
-        classes = InsideMessagesApplication.class)
-@AutoConfigureMockMvc
-@TestPropertySource(
-        locations = "classpath:application-integrationtest.properties")
-class MessageServiceTest {
+
+class MessageServiceTest extends IntegrationTestBase {
 
 
     @Autowired
@@ -42,12 +33,6 @@ class MessageServiceTest {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JWTUtil jwtUtil;
 
     /*
         Тестируем UserNotFoundExceptions

@@ -2,11 +2,8 @@ package ru.stupakov.insidemessages.servicies;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.test.context.TestPropertySource;
-import ru.stupakov.insidemessages.InsideMessagesApplication;
+import ru.stupakov.insidemessages.IntegrationTestBase;
 import ru.stupakov.insidemessages.models.User;
 import ru.stupakov.insidemessages.security.AuthDetails;
 import ru.stupakov.insidemessages.utils.exceptions.UserNotFoundExceptions;
@@ -17,14 +14,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author Stupakov D. L.
  **/
-@SpringBootTest(
-        classes = InsideMessagesApplication.class)
-@AutoConfigureMockMvc
-@TestPropertySource(
-        locations = "classpath:application-integrationtest.properties")
-class AuthDetailsServiceTest {
+//
+class AuthDetailsServiceTest extends IntegrationTestBase {
     @Autowired
     private AuthDetailsService authDetailsService;
+
 
     /*
         Тестируем throw UserNotFoundExceptions;
