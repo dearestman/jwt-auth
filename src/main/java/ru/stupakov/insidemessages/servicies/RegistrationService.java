@@ -2,6 +2,7 @@ package ru.stupakov.insidemessages.servicies;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.stupakov.insidemessages.api.request.RegistrationRequest;
@@ -19,7 +20,7 @@ import java.util.Optional;
 public class RegistrationService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
-
+    private final PasswordEncoder passwordEncoder;
 
 
     @Transactional
@@ -31,6 +32,7 @@ public class RegistrationService {
 
     private User convertToUser(RegistrationRequest registrationRequest) {
         User user = modelMapper.map(registrationRequest, User.class);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("ROLE_USER");
         return user;
     }
